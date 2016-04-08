@@ -237,8 +237,10 @@ class Kohana_Pagination {
                 /* By Bullet: lowercase controller name */
                 $this->_route_params['controller'] = lcfirst($this->_route_params['controller']);
 
-				return URL::site($this->_route->uri(array_merge($this->_route_params,
-					array($this->config['current_page']['key'] => $page))).$this->query());
+				/* By Bullet: version 3.4 parameters pass first page*/
+				$params = $page !== NULL ? array($this->config['current_page']['key'] => $page) : array();
+
+				return URL::site($this->_route->uri(array_merge($this->_route_params, $params)).$this->query());
 
             case 'query_offset':
                 /* By Bullet: lowercase controller name */
