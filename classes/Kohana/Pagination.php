@@ -83,7 +83,7 @@ class Kohana_Pagination {
 	{
 		// Overwrite system defaults with application defaults
 		$this->config = $this->config_group() + $this->config;
-		
+
 		// Assing Request
 		if ($request === NULL)
 		{
@@ -118,7 +118,7 @@ class Kohana_Pagination {
 		$config['group'] = (string) $group;
 
 		// Recursively load requested config groups
-		while (isset($config['group']) AND isset($config_file->$config['group']))
+		while (isset($config['group']) AND property_exists($config_file, $config['group']))
 		{
 			// Temporarily store config group name
 			$group = $config['group'];
@@ -239,8 +239,10 @@ class Kohana_Pagination {
 
 				/* By Bullet: version 3.4 parameters pass first page*/
 				$params = $page !== NULL ? array($this->config['current_page']['key'] => $page) : array();
-
-				return URL::site($this->_route->uri(array_merge($this->_route_params, $params)).$this->query());
+				$url = $this->_route->uri(array_merge($this->_route_params, $params)).$this->query();
+				if(!preg_match('~https?://~', $url))
+					$url = URL::site($url);
+				return $url;
 
             case 'query_offset':
                 /* By Bullet: lowercase controller name */
