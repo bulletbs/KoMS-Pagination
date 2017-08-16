@@ -21,6 +21,7 @@ class Kohana_Pagination {
 	);
 
 	// Current page number
+	protected $query_page;
 	protected $current_page;
 
 	// Total item count
@@ -194,6 +195,7 @@ class Kohana_Pagination {
 			$this->total_items        = (int) max(0, $this->config['total_items']);
 			$this->items_per_page     = (int) max(1, $this->config['items_per_page']);
 			$this->total_pages        = (int) ceil($this->total_items / $this->items_per_page);
+			$this->query_page         = $this->current_page;
 			$this->current_page       = (int) min(max(1, $this->current_page), max(1, $this->total_pages));
 			$this->current_first_item = (int) min((($this->current_page - 1) * $this->items_per_page) + 1, $this->total_items);
 			$this->current_last_item  = (int) min($this->current_first_item + $this->items_per_page - 1, $this->total_items);
@@ -203,6 +205,8 @@ class Kohana_Pagination {
 			$this->last_page          = ($this->current_page >= $this->total_pages) ? FALSE : $this->total_pages;
 			$this->offset             = (int) (($this->current_page - 1) * $this->items_per_page);
 		}
+		if($this->total_pages < $this->query_page)
+			throw new HTTP_Exception_404();
 
 		// Chainable method
 		return $this;
