@@ -205,7 +205,7 @@ class Kohana_Pagination {
 			$this->last_page          = ($this->current_page >= $this->total_pages) ? FALSE : $this->total_pages;
 			$this->offset             = (int) (($this->current_page - 1) * $this->items_per_page);
 		}
-		if($this->total_pages < $this->query_page)
+		if($this->total_pages>0 && $this->total_pages < $this->query_page)
 			throw new HTTP_Exception_404();
 
 		// Chainable method
