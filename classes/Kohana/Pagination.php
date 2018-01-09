@@ -32,6 +32,7 @@ class Kohana_Pagination {
 
 	// Total page count
 	protected $total_pages;
+	protected $max_pages = 500;
 
 	// Item offset for the first item displayed on the current page
 	protected $current_first_item;
@@ -194,7 +195,11 @@ class Kohana_Pagination {
 			// Calculate and clean all pagination variables
 			$this->total_items        = (int) max(0, $this->config['total_items']);
 			$this->items_per_page     = (int) max(1, $this->config['items_per_page']);
+
 			$this->total_pages        = (int) ceil($this->total_items / $this->items_per_page);
+			if(isset($config['max_pages']) && $config['max_pages'])
+				$this->total_pages = min($this->total_pages, $config['max_pages']);
+
 			$this->query_page         = $this->current_page;
 			$this->current_page       = (int) min(max(1, $this->current_page), max(1, $this->total_pages));
 			$this->current_first_item = (int) min((($this->current_page - 1) * $this->items_per_page) + 1, $this->total_items);
