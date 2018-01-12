@@ -221,9 +221,11 @@ class Kohana_Pagination {
 	 * Generates the full URL for a certain page.
 	 *
 	 * @param   integer  page number
+	 * @param array $query query addon parameters
+	 *
 	 * @return  string   page URL
 	 */
-	public function url($page = 1)
+	public function url($page = 1, $query=array())
 	{
 		// Clean the page number
 		$page = max(1, (int) $page);
@@ -248,7 +250,7 @@ class Kohana_Pagination {
 
 				/* By Bullet: version 3.4 parameters pass first page*/
 				$params = $page !== NULL ? array($this->config['current_page']['key'] => $page) : array();
-				$url = $this->_route->uri(array_merge($this->_route_params, $params)).$this->query();
+				$url = $this->_route->uri(array_merge($this->_route_params, $params)).$this->query($query);
 				if(!preg_match('~https?://~', $url))
 					$url = URL::site($url);
 				return $url;
@@ -258,7 +260,7 @@ class Kohana_Pagination {
                 $this->_route_params['controller'] = lcfirst($this->_route_params['controller']);
                 if($page){
                     $this->_request->query($this->config['current_page']['key'], $page * $this->items_per_page);
-                    return URL::site($this->_route->uri($this->_route_params).$this->query());
+                    return URL::site($this->_route->uri($this->_route_params).$this->query($query));
                 }
                 else
                     return URL::site($this->_route->uri($this->_route_params));
